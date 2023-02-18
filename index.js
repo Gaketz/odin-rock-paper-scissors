@@ -1,6 +1,16 @@
 console.log("Hi!");
 
 const choices = ["rock", "paper", "scissors"];
+const rockButton = document.querySelector('.rock')
+const paperButton = document.querySelector('.paper')
+const scissorsButton = document.querySelector('.scissors')
+const divOutcome = document.querySelector('.outcome')
+const currentResult = document.querySelector('.currentResult')
+const buttons = document.querySelectorAll('button')
+
+let scorePlayer = 0;
+let scoreComputer = 0;
+
 
 function getComputerChoice(){
     const choice = choices[Math.floor((Math.random() * choices.length))];
@@ -20,34 +30,48 @@ function checkWinner(playerSelection, computerSelection){
     }
 
 }
-
-function getPlayerChoices(){
-    let validatedInput = false;
-    while(validatedInput == false){
-        const choice = prompt("Rock Paper Scissors");
-        if (choice == null){
-            continue;
-        }
-        const choiceInLower = choice.toLocaleLowerCase();
-        if(choices.includes(choiceInLower)) {
-            validatedInput = true;
-            return choiceInLower;
-        }
-    }
-}
-
 function playRound(playerSelection, computerSelection){
+    const p = document.createElement('p');
     const result = checkWinner(playerSelection, computerSelection);
     if(result == "Tie"){
-        return "It's a Tie"
+        p.textContent = `It's a Tie!`;
+        divOutcome.appendChild(p);
     } else if(result == "Player"){
-        return `You Win! ${playerSelection} beats ${computerSelection}`
+        p.textContent = `You Win! ${playerSelection} beats ${computerSelection} `;
+        divOutcome.appendChild(p);
+        scorePlayer++;
     } else {
-        return `You Lose! ${computerSelection} beats ${playerSelection}`
+        p.textContent = `You Lose! ${computerSelection} beats ${playerSelection}`;
+        divOutcome.appendChild(p);
+        scoreComputer++;
     }
-
 }
 
+const score = (scorePlayer, scoreComputer) => {
+    currentResult.textContent = `Player:${scorePlayer} Computer:${scoreComputer}`;
+}
+
+function Winner(scorePlayer, scoreComputer) {
+    const h2 = document.createElement('h2');
+    if(scorePlayer === 5) {
+        h2.textContent = `You Have Won! Player:${scorePlayer} Computer:${scoreComputer}`;
+        divOutcome.appendChild(h2);
+    } else if(scoreComputer === 5) {
+        h2.textContent = `You Have Lost! Player:${scorePlayer} Computer:${scoreComputer}`;
+        divOutcome.appendChild(h2);
+    }
+}
+
+buttons.forEach(button => {
+    button.addEventListener('click', () => {
+        const playerSelection = `${button.className}`;
+        const computerSelection = getComputerChoice();
+        playRound(playerSelection, computerSelection);
+        score(scorePlayer, scoreComputer);
+        Winner(scorePlayer, scoreComputer);
+})});
+
+/*
 function game() {
     let scorePlayer = 0;
     let scoreComputer = 0;
@@ -69,4 +93,5 @@ function game() {
 console.log("Game Over")
 }
 
-game();
+
+*/
